@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class AppColors {
   static bool _isDark = true;
@@ -19,7 +19,7 @@ class AppColors {
       _isDark ? const Color(0xFF38383A) : const Color(0xFFE5E5EA);
 
   // Theme-independent colors
-  static const primary = Color(0xFFFC3E4E);
+  static const primary = Color(0xFFC4462F);
   static const mutedForeground = Color(0xFF8E8E93);
 }
 

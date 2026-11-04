@@ -1,30 +1,52 @@
 <p align="center">
-  <img src="assets/app_icon.png" width="128" height="128" alt="LeTing Icon" />
+  <img src="assets/app_icon.png" width="128" height="128" alt="KongKong Music" />
 </p>
 
-<h1 align="center">乐听 LeTing</h1>
+<h1 align="center">空空音乐 KONGKONG MUSIC</h1>
 
 <p align="center">
-  <em>LeTing your Life.</em><br>
-  No streaming. No accounts. Just your music.
-</p>
-
-<p align="center">
-  <a href="https://flutter.dev"><img src="https://img.shields.io/badge/Flutter-3.10+-02569B?logo=flutter" alt="Flutter"></a>
-  <a href="https://github.com/sealovesky/leting/releases"><img src="https://img.shields.io/github/v/release/sealovesky/leting?color=brightgreen" alt="Release"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green" alt="License"></a>
-  <a href="https://github.com/sealovesky/leting/stargazers"><img src="https://img.shields.io/github/stars/sealovesky/leting?style=social" alt="Stars"></a>
+  <em>让热爱，成为可以拥有的资产。</em><br>
+  本地音乐播放器 · 基于开源项目 LeTing 改造
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Platform-Android%20|%20iOS%20|%20macOS-lightgrey?logo=apple" alt="Platform">
-  <img src="https://img.shields.io/badge/Dart-Native-0175C2?logo=dart" alt="Dart">
+  <img src="https://img.shields.io/badge/Flutter-3.10+-02569B?logo=flutter" alt="Flutter">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+  <img src="https://img.shields.io/badge/Platform-Android%20|%20iOS%20|%20macOS-lightgrey" alt="Platform">
 </p>
 
-[中文](#中文) | [English](#english)
+## 关于这个版本
+
+本仓库是「空空音乐」App v0.1，以 MIT 协议开源的 [LeTing（乐听）](https://github.com/sealovesky/leting) v1.0.0 为底座改造：
+
+- 应用名「空空音乐 / KongKong Music」，包名 `com.kongkong.music`
+- 朱砂 `#C4462F` 主色，红底「空」字自适应启动图标
+- 品牌文案（欢迎语、通知渠道、版本信息）中英双语
+- 首页占位歌曲替换为演示曲目
+- 为 Flutter 3.47 / Dart 3.13 锁定依赖版本（见 `pubspec.yaml` 的 `dependency_overrides`）
+
+保留的原项目能力：本地扫描 / ID3 / 封面、播放与队列、后台播放与通知栏、均衡器、歌词、收藏与历史、歌单、搜索、主题切换、i18n。
+
+### 运行
+
+```bash
+flutter pub get
+flutter run -d emulator-5554        # 或你的设备
+flutter build apk --release
+```
+
+首次启动会引导扫描本地音乐；演示时把 3 首 mp3 推到 `/sdcard/Music` 即可：
+
+```bash
+adb push your_music/. /sdcard/Music/
+adb shell pm grant com.kongkong.music android.permission.READ_MEDIA_AUDIO
+```
 
 ---
 
+## 原项目文档（LeTing）
+
+以下为 LeTing 原有说明，功能与目录结构对本项目仍然适用。
 ## 中文
 
 ### 简介

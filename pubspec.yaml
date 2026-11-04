@@ -45,6 +45,19 @@ dependencies:
   path_provider: ^2.1.4
   path: ^1.9.0
 
+# 锁回与 Flutter 3.10 时代兼容的实现：
+# 新版 path_provider_android / sqflite_android 走 jni 生成代码，在 Dart 3.13 下编译失败
+dependency_overrides:
+  shared_preferences: 2.3.3
+  shared_preferences_android: 2.3.3
+  path_provider: 2.1.4
+  path_provider_android: 2.2.12
+  sqflite: 2.3.3+2
+  just_audio: 0.9.40
+  audio_service: 0.18.15
+  permission_handler: 11.3.1
+  audio_metadata_reader: 1.4.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

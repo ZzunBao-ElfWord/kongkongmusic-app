@@ -227,15 +227,13 @@ class HomeScreen extends StatelessWidget {
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: [
-                            _buildPlaceholderSong('晚风', '周深', 3),
+                            _buildPlaceholderSong('回声', '空空音乐', 3),
                             const SizedBox(width: 12),
-                            _buildPlaceholderSong('漠河舞厅', '柳爽', 5),
+                            _buildPlaceholderSong('夜航', '空空音乐', 5),
                             const SizedBox(width: 12),
-                            _buildPlaceholderSong(
-                                '孤勇者', '陈奕迅', 8),
+                            _buildPlaceholderSong('南方以南', '空空音乐', 8),
                             const SizedBox(width: 12),
-                            _buildPlaceholderSong(
-                                '起风了', '买辣椒也用券', 9),
+                            _buildPlaceholderSong('无声告白', '空空音乐', 9),
                           ],
                         ),
                       ),

@@ -1,7 +1,7 @@
-{
+﻿{
   "@@locale": "zh",
 
-  "appName": "乐听",
+  "appName": "空空音乐",
 
   "navBrowse": "浏览",
   "navSearch": "搜索",
@@ -161,8 +161,8 @@
   "settingsOther": "其他",
   "settingsNotification": "通知控制",
   "settingsNotificationDesc": "锁屏和通知栏播放控制",
-  "settingsVersion": "乐听 v1.0.0",
-  "settingsMadeWith": "LeTing your Life.",
+  "settingsVersion": "空空音乐 v1.0.0",
+  "settingsMadeWith": "让热爱，成为可以拥有的资产。",
 
   "settingsThemeDark": "深色",
   "settingsThemeLight": "浅色",
@@ -255,7 +255,7 @@
   "commonDelete": "删除",
   "commonConfirm": "确定",
 
-  "welcomeTitle": "欢迎使用乐听",
+  "welcomeTitle": "欢迎使用空空音乐",
   "welcomeScanPrompt": "是否立即扫描设备中的音乐文件？",
   "welcomeLater": "稍后",
   "welcomeScanNow": "立即扫描",
@@ -263,5 +263,5 @@
   "unknownArtist": "未知艺人",
   "unknownAlbum": "未知专辑",
 
-  "notificationChannelName": "乐听"
+  "notificationChannelName": "空空音乐"
 }

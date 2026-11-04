@@ -1,7 +1,7 @@
-{
+﻿{
   "@@locale": "en",
 
-  "appName": "LeTing",
+  "appName": "KongKong Music",
 
   "navBrowse": "Browse",
   "navSearch": "Search",
@@ -161,8 +161,8 @@
   "settingsOther": "Other",
   "settingsNotification": "Notification Control",
   "settingsNotificationDesc": "Lock screen and notification bar playback control",
-  "settingsVersion": "LeTing v1.0.0",
-  "settingsMadeWith": "LeTing your Life.",
+  "settingsVersion": "KongKong Music v1.0.0",
+  "settingsMadeWith": "Own a piece of the song.",
 
   "settingsThemeDark": "Dark",
   "settingsThemeLight": "Light",
@@ -255,7 +255,7 @@
   "commonDelete": "Delete",
   "commonConfirm": "OK",
 
-  "welcomeTitle": "Welcome to LeTing",
+  "welcomeTitle": "Welcome to KongKong Music",
   "welcomeScanPrompt": "Would you like to scan for music files on your device now?",
   "welcomeLater": "Later",
   "welcomeScanNow": "Scan Now",
@@ -263,5 +263,5 @@
   "unknownArtist": "Unknown Artist",
   "unknownAlbum": "Unknown Album",
 
-  "notificationChannelName": "LeTing"
+  "notificationChannelName": "KongKong Music"
 }
