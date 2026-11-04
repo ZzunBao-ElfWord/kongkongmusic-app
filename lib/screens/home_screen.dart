@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/album_cover.dart';
@@ -20,6 +20,10 @@ class HomeScreen extends StatelessWidget {
       builder: (context, library, playlistProv, player, _) {
         final playlists = playlistProv.playlists;
         final recentSongs = library.recentlyPlayed.take(10).toList();
+        // 没有播放历史时，用曲库里的歌填充「新歌速递」，避免空占位
+        final displaySongs = recentSongs.isNotEmpty
+            ? recentSongs
+            : library.songs.take(6).toList();
         final artists = library.artists.take(5).toList();
         final hasSongs = library.songs.isNotEmpty;
 
@@ -56,25 +60,25 @@ class HomeScreen extends StatelessWidget {
                               builder: (_) => const ScanScreen()),
                         ),
                         child: Container(
-                          padding: const EdgeInsets.all(20),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                AppColors.primary.withValues(alpha: 0.2),
-                                AppColors.primary.withValues(alpha: 0.05),
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color:
-                                  AppColors.primary.withValues(alpha: 0.3),
+                            border: Border(
+                              top: BorderSide(
+                                  color: AppColors.border
+                                      .withValues(alpha: 0.6),
+                                  width: 0.6),
+                              bottom: BorderSide(
+                                  color: AppColors.border
+                                      .withValues(alpha: 0.6),
+                                  width: 0.6),
                             ),
                           ),
                           child: Row(
                             children: [
                               const Icon(Icons.library_music_rounded,
-                                  size: 40, color: AppColors.primary),
-                              const SizedBox(width: 16),
+                                  size: 20,
+                                  color: AppColors.mutedForeground),
+                              const SizedBox(width: 12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment:
@@ -82,21 +86,21 @@ class HomeScreen extends StatelessWidget {
                                   children: [
                                     Text(l10n.homeScanLocalMusic,
                                         style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
                                             color:
                                                 AppColors.foreground)),
                                     const SizedBox(height: 4),
                                     Text(l10n.homeScanLocalMusicHint,
                                         style: const TextStyle(
-                                            fontSize: 13,
+                                            fontSize: 11.5,
                                             color: AppColors
                                                 .mutedForeground)),
                                   ],
                                 ),
                               ),
                               const Icon(Icons.arrow_forward_ios_rounded,
-                                  size: 16,
+                                  size: 12,
                                   color: AppColors.mutedForeground),
                             ],
                           ),
@@ -109,8 +113,9 @@ class HomeScreen extends StatelessWidget {
                     Text(
                       l10n.homeRecommendedPlaylists,
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: 19,
                         fontWeight: FontWeight.w600,
+                        letterSpacing: -0.3,
                         color: AppColors.foreground,
                       ),
                     ),
@@ -161,27 +166,28 @@ class HomeScreen extends StatelessWidget {
                     // Recent / New songs
                     const SizedBox(height: 24),
                     Text(
-                      recentSongs.isNotEmpty ? l10n.homeRecentlyPlayed : l10n.homeNewReleases,
+                      displaySongs.isNotEmpty ? l10n.homeRecentlyPlayed : l10n.homeNewReleases,
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: 19,
                         fontWeight: FontWeight.w600,
+                        letterSpacing: -0.3,
                         color: AppColors.foreground,
                       ),
                     ),
                     const SizedBox(height: 12),
-                    if (recentSongs.isNotEmpty)
+                    if (displaySongs.isNotEmpty)
                       SizedBox(
                         height: 170,
                         child: ListView.separated(
                           scrollDirection: Axis.horizontal,
-                          itemCount: recentSongs.length,
+                          itemCount: displaySongs.length,
                           separatorBuilder: (_, __) =>
                               const SizedBox(width: 12),
                           itemBuilder: (context, index) {
-                            final song = recentSongs[index];
+                            final song = displaySongs[index];
                             return GestureDetector(
                               onTap: () => player.playSong(song,
-                                  queue: recentSongs, index: index),
+                                  queue: displaySongs, index: index),
                               child: SizedBox(
                                 width: 120,
                                 child: Column(
@@ -310,8 +316,9 @@ class HomeScreen extends StatelessWidget {
                     Text(
                       l10n.homeCharts,
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: 19,
                         fontWeight: FontWeight.w600,
+                        letterSpacing: -0.3,
                         color: AppColors.foreground,
                       ),
                     ),

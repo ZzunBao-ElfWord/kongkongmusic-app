@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -114,19 +114,22 @@ class _MiniPlayerBarState extends State<MiniPlayerBar>
             _onDragEnd(d, player, width);
           },
           child: ClipRRect(
-            borderRadius:
-                const BorderRadius.vertical(top: Radius.circular(16)),
+            borderRadius: BorderRadius.zero,
             child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+              filter: ImageFilter.blur(sigmaX: 22, sigmaY: 22),
               child: Stack(
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 12, vertical: 10),
+                        horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: AppColors.card.withValues(alpha: 0.85),
-                      borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(16)),
+                      color: AppColors.background.withValues(alpha: 0.72),
+                      border: Border(
+                        top: BorderSide(
+                          color: AppColors.border.withValues(alpha: 0.7),
+                          width: 0.6,
+                        ),
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -184,26 +187,18 @@ class _MiniPlayerBarState extends State<MiniPlayerBar>
                               ? () => player.togglePlayPause()
                               : null,
                           child: Container(
-                            width: 36,
-                            height: 36,
+                            width: 34,
+                            height: 34,
                             decoration: BoxDecoration(
-                              color: AppColors.primary,
+                              color: AppColors.foreground,
                               shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.primary
-                                      .withValues(alpha: 0.3),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
                             ),
                             child: Icon(
                               player.isPlaying
                                   ? Icons.pause_rounded
                                   : Icons.play_arrow_rounded,
-                              color: Colors.white,
-                              size: 22,
+                              color: AppColors.background,
+                              size: 20,
                             ),
                           ),
                         ),
@@ -219,20 +214,13 @@ class _MiniPlayerBarState extends State<MiniPlayerBar>
                       alignment: Alignment.centerLeft,
                       widthFactor: progress,
                       child: Container(
-                        height: 2.5,
+                        height: 1.5,
                         decoration: BoxDecoration(
-                          color: AppColors.primary,
+                          color: AppColors.foreground,
                           borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(2),
                             bottomRight: Radius.circular(2),
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color:
-                                  AppColors.primary.withValues(alpha: 0.6),
-                              blurRadius: 6,
-                            ),
-                          ],
                         ),
                       ),
                     ),
@@ -251,7 +239,7 @@ class _MiniPlayerBarState extends State<MiniPlayerBar>
     return Row(
       children: [
         isHero ? Hero(tag: 'player-cover', child: cover) : cover,
-        const SizedBox(width: 12),
+        const SizedBox(width: 10),
         Expanded(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -260,7 +248,7 @@ class _MiniPlayerBarState extends State<MiniPlayerBar>
               Text(
                 song?.title ?? AppLocalizations.of(context)!.miniPlayerNotPlaying,
                 style: TextStyle(
-                  fontSize: 15,
+                  fontSize: 13.5,
                   fontWeight: FontWeight.w600,
                   color: AppColors.foreground,
                 ),
@@ -270,7 +258,7 @@ class _MiniPlayerBarState extends State<MiniPlayerBar>
               Text(
                 song?.artist ?? '',
                 style: const TextStyle(
-                  fontSize: 12,
+                  fontSize: 11,
                   color: AppColors.mutedForeground,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -287,7 +275,7 @@ class _MiniPlayerBarState extends State<MiniPlayerBar>
         song.coverPath != null &&
         File(song.coverPath!).existsSync()) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(3),
         child: Image.file(
           File(song.coverPath!),
           width: 44,
@@ -296,7 +284,7 @@ class _MiniPlayerBarState extends State<MiniPlayerBar>
           errorBuilder: (_, __, ___) => const AlbumCover(
             width: 44,
             height: 44,
-            borderRadius: 8,
+            borderRadius: 3,
             gradientIndex: 1,
             icon: Icons.music_note_rounded,
           ),
@@ -306,7 +294,7 @@ class _MiniPlayerBarState extends State<MiniPlayerBar>
     return AlbumCover(
       width: 44,
       height: 44,
-      borderRadius: 8,
+      borderRadius: 3,
       gradientIndex:
           song != null ? song.title.hashCode.abs() % 12 : 1,
       icon: Icons.music_note_rounded,

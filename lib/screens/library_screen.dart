@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/album_cover.dart';
@@ -145,7 +145,7 @@ class LibraryScreen extends StatelessWidget {
                             horizontal: 12),
                         decoration: BoxDecoration(
                           color: AppColors.card,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         child: Row(
                           children: [
@@ -153,19 +153,18 @@ class LibraryScreen extends StatelessWidget {
                               width: 44,
                               height: 44,
                               decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFFFC3E4E),
-                                    Color(0xFFFF7B54)
-                                  ],
+                                color: AppColors.cardSecondary,
+                                borderRadius: BorderRadius.circular(3),
+                                border: Border.all(
+                                  color:
+                                      AppColors.border.withValues(alpha: 0.6),
+                                  width: 0.6,
                                 ),
-                                borderRadius:
-                                    BorderRadius.circular(8),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                   Icons.favorite_rounded,
-                                  size: 22,
-                                  color: Colors.white),
+                                  size: 20,
+                                  color: AppColors.foreground),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -221,7 +220,7 @@ class LibraryScreen extends StatelessWidget {
                             const EdgeInsets.symmetric(horizontal: 12),
                         decoration: BoxDecoration(
                           color: AppColors.card,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(4),
                         ),
                         child: Row(
                           children: [
@@ -229,18 +228,18 @@ class LibraryScreen extends StatelessWidget {
                               width: 44,
                               height: 44,
                               decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xFF4FACFE),
-                                    Color(0xFF00F2FE)
-                                  ],
+                                color: AppColors.cardSecondary,
+                                borderRadius: BorderRadius.circular(3),
+                                border: Border.all(
+                                  color:
+                                      AppColors.border.withValues(alpha: 0.6),
+                                  width: 0.6,
                                 ),
-                                borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                   Icons.library_music_rounded,
-                                  size: 22,
-                                  color: Colors.white),
+                                  size: 20,
+                                  color: AppColors.foreground),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -294,7 +293,7 @@ class LibraryScreen extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: AppColors.cardSecondary,
                               borderRadius:
-                                  BorderRadius.circular(8),
+                                  BorderRadius.circular(3),
                             ),
                             child: Icon(Icons.add_rounded,
                                 size: 20,
@@ -327,7 +326,7 @@ class LibraryScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: AppColors.card,
                                 borderRadius:
-                                    BorderRadius.circular(12),
+                                    BorderRadius.circular(4),
                               ),
                               child: Row(
                                 children: [
@@ -396,7 +395,7 @@ class LibraryScreen extends StatelessWidget {
       height: 60,
       decoration: BoxDecoration(
         color: AppColors.card,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(4),
       ),
       child: Center(
         child: Text(

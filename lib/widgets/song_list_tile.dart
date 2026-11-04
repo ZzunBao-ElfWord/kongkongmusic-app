@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/song.dart';
@@ -46,7 +46,7 @@ class SongListTile extends StatelessWidget {
           color: isPlaying
               ? AppColors.primary.withValues(alpha: 0.08)
               : AppColors.card,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(4),
           border: isPlaying
               ? Border.all(color: AppColors.primary.withValues(alpha: 0.2))
               : null,
@@ -133,7 +133,7 @@ class SongListTile extends StatelessWidget {
   Widget _buildCover() {
     if (song.coverPath != null && File(song.coverPath!).existsSync()) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(3),
         child: Image.file(
           File(song.coverPath!),
           width: 44,

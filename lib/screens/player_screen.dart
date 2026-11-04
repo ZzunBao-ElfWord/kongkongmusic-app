@@ -1,4 +1,4 @@
-import 'dart:async';
+﻿import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -145,21 +145,14 @@ class _PlayerScreenState extends State<PlayerScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         centerTitle: true,
-        title: Column(
-          children: [
-            Container(
-              width: 36,
-              height: 4,
-              margin: const EdgeInsets.only(bottom: 6),
-              decoration: BoxDecoration(
-                color: AppColors.mutedForeground.withValues(alpha: 0.3),
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            Text(l10n.playerNowPlaying,
-                style: const TextStyle(
-                    fontSize: 12, color: AppColors.mutedForeground)),
-          ],
+        title: Text(
+          l10n.playerNowPlaying.toUpperCase(),
+          style: const TextStyle(
+            fontSize: 9.5,
+            letterSpacing: 2.4,
+            fontWeight: FontWeight.w500,
+            color: AppColors.mutedForeground,
+          ),
         ),
         actions: [
           Consumer<LibraryProvider>(
@@ -218,8 +211,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           builder: (context, constraints) {
                             final screenH = MediaQuery.of(context).size.height;
                             final coverSize = hasLyrics
-                                ? (screenH * 0.22).clamp(100.0, 180.0)
-                                : (screenH * 0.35).clamp(120.0, 280.0);
+                                ? (screenH * 0.20).clamp(96.0, 150.0)
+                                : (screenH * 0.40).clamp(160.0, 320.0);
                             return Hero(
                               tag: 'player-cover',
                               child: _buildCover(song, coverSize),
@@ -229,23 +222,35 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       ),
                       const SizedBox(height: 12),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.foreground,
+                        padding: const EdgeInsets.symmetric(horizontal: 26),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            title,
+                            style: TextStyle(
+                              fontSize: 30,
+                              height: 1.15,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: -0.6,
+                              color: AppColors.foreground,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        artist,
-                        style: const TextStyle(
-                          fontSize: 15,
-                          color: AppColors.mutedForeground,
+                      const SizedBox(height: 6),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 26),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            artist,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.mutedForeground,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -452,15 +457,15 @@ class _PlayerScreenState extends State<PlayerScreen> {
       children: [
         SliderTheme(
           data: SliderThemeData(
-            trackHeight: 4,
+            trackHeight: 2,
             thumbShape:
-                const RoundSliderThumbShape(enabledThumbRadius: 6),
+                const RoundSliderThumbShape(enabledThumbRadius: 4),
             overlayShape:
-                const RoundSliderOverlayShape(overlayRadius: 14),
-            activeTrackColor: AppColors.primary,
+                const RoundSliderOverlayShape(overlayRadius: 12),
+            activeTrackColor: AppColors.foreground,
             inactiveTrackColor: AppColors.border,
-            thumbColor: AppColors.primary,
-            overlayColor: AppColors.primary.withValues(alpha: 0.2),
+            thumbColor: AppColors.foreground,
+            overlayColor: AppColors.foreground.withValues(alpha: 0.12),
           ),
           child: Slider(
             value: (_isSeeking ? _seekValue : progress).clamp(0.0, 1.0),
@@ -519,33 +524,25 @@ class _PlayerScreenState extends State<PlayerScreen> {
               onPressed: () => player.cyclePlayMode(),
             ),
             const SizedBox(width: 8),
-            GestureDetector(
-              onTap: () => player.previous(),
-              child: Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.cardSecondary,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.skip_previous_rounded,
-                    color: AppColors.foreground, size: 28),
-              ),
+            IconButton(
+              onPressed: () => player.previous(),
+              icon: Icon(Icons.skip_previous_rounded,
+                  color: AppColors.foreground, size: 34),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 8),
             GestureDetector(
               onTap: () => player.togglePlayPause(),
               child: Container(
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: AppColors.primary,
+                  color: AppColors.foreground,
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.4),
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
+                      color: Colors.black.withValues(alpha: 0.45),
+                      blurRadius: 24,
+                      offset: const Offset(0, 8),
                     ),
                   ],
                 ),
@@ -553,24 +550,16 @@ class _PlayerScreenState extends State<PlayerScreen> {
                   player.isPlaying
                       ? Icons.pause_rounded
                       : Icons.play_arrow_rounded,
-                  color: Colors.white,
-                  size: 36,
+                  color: AppColors.background,
+                  size: 34,
                 ),
               ),
             ),
-            const SizedBox(width: 16),
-            GestureDetector(
-              onTap: () => player.next(),
-              child: Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.cardSecondary,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(Icons.skip_next_rounded,
-                    color: AppColors.foreground, size: 28),
-              ),
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: () => player.next(),
+              icon: Icon(Icons.skip_next_rounded,
+                  color: AppColors.foreground, size: 34),
             ),
             const SizedBox(width: 8),
             IconButton(
@@ -589,9 +578,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
             Expanded(
               child: SliderTheme(
                 data: SliderThemeData(
-                  trackHeight: 3,
+                  trackHeight: 2,
                   thumbShape: const RoundSliderThumbShape(
-                      enabledThumbRadius: 5),
+                      enabledThumbRadius: 3),
                   overlayShape: const RoundSliderOverlayShape(
                       overlayRadius: 12),
                   activeTrackColor: AppColors.mutedForeground,
@@ -620,7 +609,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
         song.coverPath != null &&
         File(song.coverPath!).existsSync()) {
       return ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(4),
         child: Image.file(
           File(song.coverPath!),
           width: size,
@@ -629,7 +618,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
           errorBuilder: (_, __, ___) => AlbumCover(
             width: size,
             height: size,
-            borderRadius: 16,
+            borderRadius: 4,
             gradientIndex: 1,
             icon: Icons.music_note_rounded,
           ),
@@ -639,7 +628,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
     return AlbumCover(
       width: size,
       height: size,
-      borderRadius: 16,
+      borderRadius: 4,
       gradientIndex: song != null ? song.title.hashCode.abs() % 12 : 1,
       icon: Icons.music_note_rounded,
     );

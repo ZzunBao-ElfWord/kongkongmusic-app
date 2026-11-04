@@ -1,4 +1,4 @@
-import 'dart:io';
+﻿import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
@@ -28,19 +28,20 @@ class AlbumCover extends StatelessWidget {
     this.imageData,
   });
 
+  // 静奢黑：低饱和、深色渐变，靠明度而不是饱和度区分
   static const _gradients = [
-    [Color(0xFFFC3E4E), Color(0xFFFF7B54)],
-    [Color(0xFF667EEA), Color(0xFF764BA2)],
-    [Color(0xFF11998E), Color(0xFF38EF7D)],
-    [Color(0xFFF093FB), Color(0xFFF5576C)],
-    [Color(0xFF4FACFE), Color(0xFF00F2FE)],
-    [Color(0xFF43E97B), Color(0xFF38F9D7)],
-    [Color(0xFFFA709A), Color(0xFFFEE140)],
-    [Color(0xFFA18CD1), Color(0xFFFBC2EB)],
-    [Color(0xFFFCCB90), Color(0xFFD57EEB)],
-    [Color(0xFF5EE7DF), Color(0xFFB490CA)],
-    [Color(0xFFFF9A9E), Color(0xFFFECFEF)],
-    [Color(0xFF89F7FE), Color(0xFF66A6FF)],
+    [Color(0xFF3A2320), Color(0xFF0D0A09)],
+    [Color(0xFF1E2433), Color(0xFF0A0C11)],
+    [Color(0xFF173029), Color(0xFF0A100D)],
+    [Color(0xFF3B2B1B), Color(0xFF100D09)],
+    [Color(0xFF2E1D33), Color(0xFF0C090F)],
+    [Color(0xFF1D2A33), Color(0xFF0A0D11)],
+    [Color(0xFF33231F), Color(0xFF0F0B0A)],
+    [Color(0xFF27231B), Color(0xFF0C0B09)],
+    [Color(0xFF202A24), Color(0xFF0A0D0B)],
+    [Color(0xFF2A2030), Color(0xFF0C0A0F)],
+    [Color(0xFF2A1F25), Color(0xFF0E0B0C)],
+    [Color(0xFF1B2430), Color(0xFF0A0D11)],
   ];
 
   @override
@@ -74,9 +75,9 @@ class AlbumCover extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: colors[0].withValues(alpha: 0.3),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.45),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
           ),
         ],
       ),

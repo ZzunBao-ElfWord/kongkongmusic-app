@@ -16,10 +16,15 @@ class BottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Container(
-      height: 64 + MediaQuery.of(context).padding.bottom,
+      height: 58 + MediaQuery.of(context).padding.bottom,
       decoration: BoxDecoration(
-        color: AppColors.card,
-        border: Border(top: BorderSide(color: AppColors.border, width: 0.5)),
+        color: AppColors.background,
+        border: Border(
+          top: BorderSide(
+            color: AppColors.border.withValues(alpha: 0.7),
+            width: 0.6,
+          ),
+        ),
       ),
       child: SafeArea(
         top: false,
@@ -37,7 +42,9 @@ class BottomNav extends StatelessWidget {
 
   Widget _buildNavItem(IconData icon, String label, int index) {
     final isActive = currentIndex == index;
-    final color = isActive ? AppColors.primary : AppColors.mutedForeground;
+    final color = isActive
+        ? AppColors.foreground
+        : AppColors.mutedForeground.withValues(alpha: 0.55);
     return Expanded(
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -45,11 +52,16 @@ class BottomNav extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 24, color: color),
-            const SizedBox(height: 2),
+            Icon(icon, size: 23, color: color),
+            const SizedBox(height: 3),
             Text(
               label,
-              style: TextStyle(fontSize: 10, color: color),
+              style: TextStyle(
+                fontSize: 9,
+                letterSpacing: 0.4,
+                color: color,
+                fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+              ),
             ),
           ],
         ),
