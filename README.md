@@ -1,4 +1,4 @@
-<p align="center">
+﻿<p align="center">
   <img src="assets/app_icon.png" width="128" height="128" alt="KongKong Music" />
 </p>
 
@@ -41,6 +41,10 @@ flutter build apk --release
 adb push your_music/. /sdcard/Music/
 adb shell pm grant com.kongkong.music android.permission.READ_MEDIA_AUDIO
 ```
+
+### 演示音乐
+
+内置 12 首 **CC BY** 授权的完整曲目（来自 Jamendo），允许商业使用但需保留署名。逐曲署名、许可链接与写入脚本见 [docs/music-credits.md](docs/music-credits.md)。
 
 ---
 
