@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="空空之音是一款本地音乐播放器，帮助你扫描、整理和播放设备上的音乐。">
+  <title>空空之音｜本地音乐播放器</title>
+  <style>
+    :root { color-scheme: light; --ink:#202124; --muted:#5f6368; --accent:#b93535; --paper:#f7f5f2; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { max-width:780px; margin:0 auto; padding:72px 24px 56px; }
+    .mark { color:var(--accent); font-weight:700; letter-spacing:.08em; }
+    h1 { margin:12px 0 8px; font-size:clamp(2.4rem,8vw,4.8rem); line-height:1.1; }
+    .lead { max-width:610px; color:var(--muted); font-size:1.15rem; }
+    .features { margin:40px 0; padding:24px 28px; background:white; border-radius:18px; }
+    .features li { margin:6px 0; }
+    nav { display:flex; flex-wrap:wrap; gap:14px; margin-top:28px; }
+    a { color:#8b2424; }
+    nav a { padding:10px 16px; background:#fff; border-radius:999px; font-weight:600; text-decoration:none; }
+    footer { margin-top:72px; color:var(--muted); font-size:.9rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="mark">KONGKONG MUSIC</p>
+    <h1>空空之音</h1>
+    <p class="lead">一款专注于设备本地音乐的播放器。扫描并整理音乐资料库，管理歌单、收藏与播放记录，按自己的习惯聆听。</p>
+    <section class="features" aria-label="功能">
+      <ul>
+        <li>扫描设备中可访问的音乐文件与歌曲信息</li>
+        <li>播放控制、后台播放和播放队列</li>
+        <li>歌单、收藏、搜索与播放历史</li>
+        <li>均衡器与主题、语言设置</li>
+      </ul>
+      <p>音乐文件与资料库信息保存在设备本地。应用不会把本地音乐文件上传到开发者服务器。</p>
+    </section>
+    <nav aria-label="相关信息">
+      <a href="privacy.html">隐私政策</a>
+      <a href="support.html">技术支持</a>
+      <a href="https://github.com/ZzunBao-ElfWord/kongkongmusic-app">GitHub 项目</a>
+    </nav>
+    <footer>© 2026 空空之音</footer>
+  </main>
+</body>
+</html>
