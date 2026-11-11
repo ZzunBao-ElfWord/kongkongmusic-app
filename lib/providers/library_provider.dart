@@ -101,6 +101,11 @@ class LibraryProvider extends ChangeNotifier {
     await openAppSettings();
   }
 
+  Future<void> importAudioFile(String path, String name) async {
+    await _localMusicService.importAudioFile(path, name);
+    await scanLocalMusic();
+  }
+
   Future<void> scanLocalMusic() async {
     // 权限检查（仅 Android）
     _permissionDenied = false;

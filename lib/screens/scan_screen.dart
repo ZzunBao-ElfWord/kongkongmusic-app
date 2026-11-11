@@ -1,22 +1,58 @@
+import 'package:file_selector/file_selector.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
 import '../providers/library_provider.dart';
 import '../l10n/app_localizations.dart';
 
-class ScanScreen extends StatelessWidget {
+class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
+
+  @override
+  State<ScanScreen> createState() => _ScanScreenState();
+}
+
+class _ScanScreenState extends State<ScanScreen> {
+  bool _isImporting = false;
+
+  Future<void> _importAudio(LibraryProvider library) async {
+    setState(() => _isImporting = true);
+    try {
+      final file = await openFile(
+        acceptedTypeGroups: [
+          const XTypeGroup(
+            label: 'audio',
+            uniformTypeIdentifiers: ['public.audio'],
+          ),
+        ],
+      );
+      if (file != null && mounted) {
+        await library.importAudioFile(file.path, file.name);
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.scanImportFailed),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isImporting = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final canImport = !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_rounded,
-              color: AppColors.foreground),
+          icon: Icon(Icons.arrow_back_ios_rounded, color: AppColors.foreground),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
@@ -52,8 +88,8 @@ class ScanScreen extends StatelessWidget {
                     denied
                         ? Icons.lock_rounded
                         : library.isScanning
-                            ? Icons.radar_rounded
-                            : Icons.folder_open_rounded,
+                        ? Icons.radar_rounded
+                        : Icons.folder_open_rounded,
                     size: 56,
                     color: denied ? Colors.orange : AppColors.primary,
                   ),
@@ -64,15 +100,13 @@ class ScanScreen extends StatelessWidget {
                   denied
                       ? l10n.scanNeedPermission
                       : library.isScanning
-                          ? library.scanStatus
-                          : library.songs.isEmpty
-                              ? l10n.scanTapToScan
-                              : l10n.scanSongCount(library.songs.length),
+                      ? library.scanStatus
+                      : library.songs.isEmpty
+                      ? (canImport ? l10n.scanImportHint : l10n.scanTapToScan)
+                      : l10n.scanSongCount(library.songs.length),
                   style: TextStyle(
                     fontSize: 16,
-                    color: denied
-                        ? Colors.orange
-                        : AppColors.mutedForeground,
+                    color: denied ? Colors.orange : AppColors.mutedForeground,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -102,8 +136,9 @@ class ScanScreen extends StatelessWidget {
                 if (library.isScanning)
                   LinearProgressIndicator(
                     backgroundColor: AppColors.border,
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(AppColors.primary),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.primary,
+                    ),
                   ),
                 const Spacer(),
                 // Action button
@@ -156,15 +191,16 @@ class ScanScreen extends StatelessWidget {
                     width: double.infinity,
                     height: 52,
                     child: ElevatedButton(
-                      onPressed: library.isScanning
+                      onPressed: library.isScanning || _isImporting
                           ? null
                           : () => library.scanLocalMusic(),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: denied
                             ? Colors.orange
                             : AppColors.primary,
-                        disabledBackgroundColor:
-                            AppColors.primary.withValues(alpha: 0.3),
+                        disabledBackgroundColor: AppColors.primary.withValues(
+                          alpha: 0.3,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(999),
                         ),
@@ -173,10 +209,10 @@ class ScanScreen extends StatelessWidget {
                         library.isScanning
                             ? l10n.scanScanning
                             : denied
-                                ? l10n.scanGrantPermission
-                                : library.songs.isEmpty
-                                    ? l10n.scanStart
-                                    : l10n.scanRescan,
+                            ? l10n.scanGrantPermission
+                            : library.songs.isEmpty
+                            ? l10n.scanStart
+                            : l10n.scanRescan,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -186,11 +222,21 @@ class ScanScreen extends StatelessWidget {
                     ),
                   ),
                 const SizedBox(height: 16),
+                if (canImport)
+                  TextButton.icon(
+                    onPressed: _isImporting || library.isScanning
+                        ? null
+                        : () => _importAudio(library),
+                    icon: const Icon(Icons.file_open_outlined),
+                    label: Text(l10n.scanImportAudio),
+                  ),
                 // Supported formats info
                 Text(
                   l10n.scanSupportedFormats,
                   style: const TextStyle(
-                      fontSize: 12, color: AppColors.mutedForeground),
+                    fontSize: 12,
+                    color: AppColors.mutedForeground,
+                  ),
                 ),
                 const SizedBox(height: 32),
               ],

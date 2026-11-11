@@ -9,6 +9,7 @@ import '../providers/player_provider.dart';
 import '../providers/library_provider.dart';
 import '../services/lyrics_service.dart';
 import '../l10n/app_localizations.dart';
+import 'playlist_screen.dart';
 
 Route createPlayerRoute() {
   return PageRouteBuilder(
@@ -557,15 +558,29 @@ class _PlayerScreenState extends State<PlayerScreen> {
             ),
             const SizedBox(width: 8),
             IconButton(
-              onPressed: () => player.next(),
+              onPressed: player.hasNext ? player.next : null,
               icon: Icon(Icons.skip_next_rounded,
-                  color: AppColors.foreground, size: 34),
+                  color: player.hasNext
+                      ? AppColors.foreground
+                      : AppColors.mutedForeground,
+                  size: 34),
             ),
             const SizedBox(width: 8),
             IconButton(
               icon: const Icon(Icons.queue_music_rounded,
                   color: AppColors.mutedForeground, size: 22),
-              onPressed: () {},
+              tooltip: AppLocalizations.of(context)!.playlistTitle,
+              onPressed: () => showModalBottomSheet<void>(
+                context: context,
+                backgroundColor: AppColors.background,
+                isScrollControlled: true,
+                useSafeArea: true,
+                showDragHandle: true,
+                builder: (_) => const FractionallySizedBox(
+                  heightFactor: 0.75,
+                  child: SafeArea(top: false, child: PlaylistScreen()),
+                ),
+              ),
             ),
           ],
         ),

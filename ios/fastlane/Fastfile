@@ -1,0 +1,138 @@
+default_platform(:ios)
+
+# Flutter 工程：打包必须走 flutter CLI，不能用 gym/xcodebuild
+# 本机 flutter 依赖 .flutter-tools 里的 git 垫片，否则会卡在版本探测
+FLUTTER_ENV = <<~SH.freeze
+  export PATH="$HOME/.flutter-tools:$HOME/development/flutter/bin:$PATH"
+  export FLUTTER_PREBUILT_ENGINE_VERSION="$(cat "$HOME/development/flutter/bin/internal/engine.version" 2>/dev/null)"
+  export PUB_HOSTED_URL="https://pub.flutter-io.cn"
+  export FLUTTER_STORAGE_BASE_URL="https://storage.flutter-io.cn"
+SH
+
+platform :ios do
+  # ===== App Store Connect API Key（KTRCLTK65A）=====
+  ASC_API_KEY = app_store_connect_api_key(
+    key_id: "KTRCLTK65A",
+    issuer_id: "80036682-0187-4edb-a806-6ec801ce09e1",
+    key_filepath: "/Users/a12344444/.appstoreconnect/private_keys/AuthKey_KTRCLTK65A.p8"
+  )
+
+  desc "构建 App Store 包（需先在 Xcode 中配置 Team）"
+  lane :build do
+    sh "#{FLUTTER_ENV}cd .. && flutter build ipa --release --export-method app-store"
+    UI.success("ipa: ../build/ios/ipa")
+  end
+
+  desc "推送 App Store 元数据 + 截屏"
+  lane :metadata do
+    deliver(
+      api_key: ASC_API_KEY,
+      app_identifier: "com.kongkongmusic.app",
+      submit_for_review: false,
+      skip_binary_upload: true,
+      force: true,
+      overwrite_screenshots: true,
+      skip_app_version_update: true,
+      run_precheck_before_submit: false,   # API Key 模式下 precheck 对 IAP 会报错
+      ignore_language_directory_validation: true,
+
+      # ===== 元数据（中文优先，en-US 为可选补充）=====
+      privacy_url: {
+        "en-US" => "https://kongkongmusic.com/privacy/",
+        "zh-Hans" => "https://kongkongmusic.com/privacy/",
+      },
+      support_url: {
+        "en-US" => "https://kongkongmusic.com/support/",
+        "zh-Hans" => "https://kongkongmusic.com/support/",
+      },
+      marketing_url: {
+        "en-US" => "https://kongkongmusic.com/",
+        "zh-Hans" => "https://kongkongmusic.com/",
+      },
+      name: {
+        "en-US" => "KongKong Music",
+        "zh-Hans" => "空空之音",
+      },
+      subtitle: {
+        "en-US" => "Offline local music player",
+        "zh-Hans" => "纯本地离线音乐播放器",
+      },
+      keywords: {
+        "en-US" => "music,player,local,offline,lossless,mp3,flac",
+        "zh-Hans" => "音乐,播放器,本地,离线,无损,无损音乐,FLAC",
+      },
+      description: {
+        "en-US" => <<~DESC,
+        KongKong Music is a pure offline local music player.
+
+        • No network, no registration, no data upload
+        • Apple Music style dark theme UI
+        • Scan and play local audio files (MP3/FLAC/WAV/AAC/M4A/OGG)
+        • Create playlists, favorite songs, play history
+        • Chinese/English, dark/light/system theme
+        • Native player experience with background audio
+
+        All data stays only on your own device. Nothing is sent to any server.
+        DESC
+        "zh-Hans" => <<~DESC
+        空空之音是一款纯本地离线音乐播放器。
+
+        • 不联网、不注册、不上传任何数据
+        • Apple Music 风格的深色主题界面
+        • 扫描并播放本地音频文件（MP3/FLAC/WAV/AAC/M4A/OGG）
+        • 自建歌单、收藏歌曲、播放历史
+        • 中文/英文、深色/浅色/跟随系统主题
+        • 原生播放器体验，支持后台播放
+
+        所有数据仅保存在你自己的设备上，不会发送到任何服务器。
+        DESC
+      },
+      release_notes: {
+        "en-US" => "v1.0.3\n📱 iPad support: now runs natively on iPad with optimized layout.\n\nv1.0.2\n🎨 New app icon (purple + neon yellow music note)\n\nv1.0.1\n🎤 Voice search: tap the mic button next to the search bar, say a song name or artist, and instantly find it in your local library.\n\nOther fixes:\n• Minor UI polish\n• Improved scan performance",
+        "zh-Hans" => "v1.0.3\n📱 支持 iPad：现已原生适配 iPad，布局更流畅。\n\nv1.0.2\n🎨 全新 App 图标（紫色底 + 荧光黄音符）\n\nv1.0.1\n🎤 语音搜索：点击搜索框右侧麦克风按钮，说出歌曲名或歌手名，即可在本地曲库中即时检索。\n\n其他修复：\n• 界面细节打磨\n• 扫描性能优化",
+      },
+      primary_category: "MUSIC",
+      secondary_category: "ENTERTAINMENT",
+      app_review_information: {
+        first_name:    "臻圣",
+        last_name:     "陈",
+        phone_number:  "+86 182 0596 8321",
+        email_address: "nftfccomcn@163.com",
+        notes:         "空空之音是纯本地离线音乐播放器，不需要联网、不需要账号登录。首次启动后点击「扫描本地音乐」即可使用全部功能。无 App 内购买项目。",
+      },
+    )
+    UI.success("✅ App Store Connect 元数据已推送")
+  end
+
+  desc "查看 TestFlight builds 状态"
+  lane :tf_builds do
+    pilot(
+      api_key: ASC_API_KEY,
+      app_identifier: "com.kongkongmusic.app",
+      command: "builds",
+    )
+  end
+
+  desc "把最新 build 分配给内部测试组"
+  lane :tf_internal do
+    pilot(
+      api_key: ASC_API_KEY,
+      app_identifier: "com.kongkongmusic.app",
+      distribute_only: true,
+      skip_waiting_for_build_processing: true,
+      distribute_external: false,
+    )
+    UI.success("✅ 已分配给内部测试员")
+  end
+
+  desc "构建 + 上传 + 推送元数据（完整发布流程）"
+  lane :release do
+    build
+    upload_to_app_store(
+      api_key: ASC_API_KEY,
+      skip_metadata_update: false,
+      submit_for_review: false,
+    )
+    UI.success("✅ 构建完成，ipa 和元数据都已上传")
+  end
+end

@@ -1,4 +1,4 @@
-﻿﻿{
+﻿{
   "@@locale": "en",
 
   "appName": "KongKong Music",
@@ -72,6 +72,7 @@
   "libraryAllSongs": "All Songs",
   "libraryMyPlaylists": "My Playlists",
   "libraryNoPlaylistHint": "No playlists yet, tap + to create",
+  "libraryCreatePlaylistFailed": "Could not create the playlist. Please try again.",
   "libraryNewPlaylist": "New Playlist",
   "libraryPlaylistName": "Playlist name",
 
@@ -121,6 +122,9 @@
 
   "scanTitle": "Scan Local Music",
   "scanNeedPermission": "Storage permission is required to scan local music",
+  "scanImportAudio": "Import Audio from Files",
+  "scanImportHint": "Choose a local audio file to add it to your library.",
+  "scanImportFailed": "Could not import the audio file. Try an MP3, M4A or WAV file.",
   "scanTapToScan": "Tap the button below to scan music files on your device",
   "scanSongCount": "{count} songs found",
   "@scanSongCount": {

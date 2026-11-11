@@ -2,6 +2,7 @@
 import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/album_cover.dart';
+import '../widgets/create_playlist_dialog.dart';
 import '../providers/library_provider.dart';
 import '../providers/playlist_provider.dart';
 import '../providers/player_provider.dart';
@@ -286,7 +287,7 @@ class LibraryScreen extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () =>
-                              _showCreatePlaylistDialog(context),
+                              showCreatePlaylistDialog(context),
                           child: Container(
                             width: 32,
                             height: 32,
@@ -403,56 +404,6 @@ class LibraryScreen extends StatelessWidget {
           style: const TextStyle(
               fontSize: 14, color: AppColors.mutedForeground),
         ),
-      ),
-    );
-  }
-
-  void _showCreatePlaylistDialog(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final controller = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.card,
-        title: Text(l10n.libraryNewPlaylist,
-            style: TextStyle(color: AppColors.foreground)),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          style: TextStyle(color: AppColors.foreground),
-          decoration: InputDecoration(
-            hintText: l10n.libraryPlaylistName,
-            hintStyle:
-                const TextStyle(color: AppColors.mutedForeground),
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                  color: AppColors.border),
-            ),
-            focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.primary),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: Text(l10n.commonCancel,
-                style: const TextStyle(color: AppColors.mutedForeground)),
-          ),
-          TextButton(
-            onPressed: () {
-              final name = controller.text.trim();
-              if (name.isNotEmpty) {
-                context
-                    .read<PlaylistProvider>()
-                    .createPlaylist(name);
-                Navigator.of(ctx).pop();
-              }
-            },
-            child: Text(l10n.commonCreate,
-                style: const TextStyle(color: AppColors.primary)),
-          ),
-        ],
       ),
     );
   }

@@ -9,6 +9,23 @@ class LocalMusicService {
     '.mp3', '.flac', '.wav', '.aac', '.m4a', '.ogg', '.wma',
   };
 
+  Future<void> importAudioFile(String path, String name) async {
+    final filename = p.basename(name);
+    if (!_audioExtensions.contains(p.extension(filename).toLowerCase())) {
+      throw const FormatException('Unsupported audio file');
+    }
+
+    final documents = await getApplicationDocumentsDirectory();
+    final music = await Directory(p.join(documents.path, 'Music')).create();
+    final destination = await music.createTemp('import-');
+    try {
+      await File(path).copy(p.join(destination.path, filename));
+    } catch (_) {
+      await destination.delete(recursive: true);
+      rethrow;
+    }
+  }
+
   /// Scan for music files in common directories
   Stream<Song> scanLocalMusic() async* {
     final directories = await _getMusicDirectories();

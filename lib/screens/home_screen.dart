@@ -2,6 +2,7 @@
 import 'package:provider/provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/album_cover.dart';
+import '../widgets/create_playlist_dialog.dart';
 import '../providers/library_provider.dart';
 import '../providers/playlist_provider.dart';
 import '../providers/player_provider.dart';
@@ -20,7 +21,7 @@ class HomeScreen extends StatelessWidget {
       builder: (context, library, playlistProv, player, _) {
         final playlists = playlistProv.playlists;
         final recentSongs = library.recentlyPlayed.take(10).toList();
-        // 没有播放历史时，用曲库里的歌填充「新歌速递」，避免空占位
+        // 没有播放历史时，显示本地曲库里的歌曲
         final displaySongs = recentSongs.isNotEmpty
             ? recentSongs
             : library.songs.take(6).toList();
@@ -126,10 +127,15 @@ class HomeScreen extends StatelessWidget {
                         child: ListView(
                           scrollDirection: Axis.horizontal,
                           children: [
-                            _PlaylistCard(
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: () => showCreatePlaylistDialog(context),
+                              child: _PlaylistCard(
                                 title: l10n.homeCreateFirstPlaylist,
                                 subtitle: l10n.homeCreateFirstPlaylistHint,
-                                gradientIndex: 0),
+                                gradientIndex: 0,
+                              ),
+                            ),
                           ],
                         ),
                       )
@@ -163,19 +169,20 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
 
-                    // Recent / New songs
-                    const SizedBox(height: 24),
-                    Text(
-                      displaySongs.isNotEmpty ? l10n.homeRecentlyPlayed : l10n.homeNewReleases,
-                      style: TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.3,
-                        color: AppColors.foreground,
+                    if (displaySongs.isNotEmpty) ...[
+                      const SizedBox(height: 24),
+                      Text(
+                        recentSongs.isNotEmpty
+                            ? l10n.homeRecentlyPlayed
+                            : l10n.libraryAllSongs,
+                        style: TextStyle(
+                          fontSize: 19,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: -0.3,
+                          color: AppColors.foreground,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    if (displaySongs.isNotEmpty)
+                      const SizedBox(height: 12),
                       SizedBox(
                         height: 170,
                         child: ListView.separated(
@@ -226,23 +233,8 @@ class HomeScreen extends StatelessWidget {
                             );
                           },
                         ),
-                      )
-                    else
-                      SizedBox(
-                        height: 170,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            _buildPlaceholderSong('回声', '空空音乐', 3),
-                            const SizedBox(width: 12),
-                            _buildPlaceholderSong('夜航', '空空音乐', 5),
-                            const SizedBox(width: 12),
-                            _buildPlaceholderSong('南方以南', '空空音乐', 8),
-                            const SizedBox(width: 12),
-                            _buildPlaceholderSong('无声告白', '空空音乐', 9),
-                          ],
-                        ),
                       ),
+                    ],
 
                     // Artists
                     if (artists.isNotEmpty) ...[
@@ -311,23 +303,6 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
 
-                    // Charts
-                    const SizedBox(height: 24),
-                    Text(
-                      l10n.homeCharts,
-                      style: TextStyle(
-                        fontSize: 19,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: -0.3,
-                        color: AppColors.foreground,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    _buildChartItem(1, l10n.homeHotSingles, l10n.homeHotSinglesDesc, 0),
-                    const SizedBox(height: 8),
-                    _buildChartItem(2, l10n.homeRisingSongs, l10n.homeRisingSongsDesc, 1),
-                    const SizedBox(height: 8),
-                    _buildChartItem(3, l10n.homeOriginalMusic, l10n.homeOriginalMusicDesc, 2),
                     const SizedBox(height: 32),
                   ],
                 ),
@@ -336,84 +311,6 @@ class HomeScreen extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-
-  static Widget _buildPlaceholderSong(
-      String title, String artist, int gradientIndex) {
-    return SizedBox(
-      width: 120,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          AlbumCover(
-            width: 120,
-            height: 120,
-            gradientIndex: gradientIndex,
-            icon: Icons.music_note_rounded,
-          ),
-          const SizedBox(height: 6),
-          Text(title,
-              style: TextStyle(
-                  fontSize: 13, color: AppColors.foreground),
-              overflow: TextOverflow.ellipsis),
-          Text(artist,
-              style: const TextStyle(
-                  fontSize: 11, color: AppColors.mutedForeground),
-              overflow: TextOverflow.ellipsis),
-        ],
-      ),
-    );
-  }
-
-  static Widget _buildChartItem(
-      int rank, String title, String desc, int gradientIndex) {
-    return Container(
-      height: 72,
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          AlbumCover(
-            width: 48,
-            height: 48,
-            borderRadius: 8,
-            gradientIndex: gradientIndex,
-            icon: Icons.bar_chart_rounded,
-          ),
-          const SizedBox(width: 12),
-          Text(
-            '$rank',
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: AppColors.primary,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,
-                    style: TextStyle(
-                        fontSize: 16, color: AppColors.foreground)),
-                const SizedBox(height: 2),
-                Text(desc,
-                    style: const TextStyle(
-                        fontSize: 12,
-                        color: AppColors.mutedForeground)),
-              ],
-            ),
-          ),
-          const Icon(Icons.chevron_right_rounded,
-              color: AppColors.mutedForeground, size: 20),
-        ],
-      ),
     );
   }
 }

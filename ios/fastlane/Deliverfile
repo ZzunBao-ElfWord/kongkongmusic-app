@@ -1,0 +1,5 @@
+# App Store Connect 元数据配置（fastlane Deliverfile DSL）
+# 参考：https://docs.fastlane.tools/actions/deliver/
+# 注：多数字段也可直接写在 Fastfile 的 deliver() 参数里，两边任选
+
+app_identifier "com.kongkongmusic.app"

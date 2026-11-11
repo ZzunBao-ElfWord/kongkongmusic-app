@@ -1,4 +1,4 @@
-﻿﻿{
+﻿{
   "@@locale": "zh",
 
   "appName": "空空音乐",
@@ -72,6 +72,7 @@
   "libraryAllSongs": "全部歌曲",
   "libraryMyPlaylists": "自建歌单",
   "libraryNoPlaylistHint": "还没有歌单，点击 + 创建",
+  "libraryCreatePlaylistFailed": "无法创建歌单，请重试。",
   "libraryNewPlaylist": "新建歌单",
   "libraryPlaylistName": "歌单名称",
 
@@ -121,6 +122,9 @@
 
   "scanTitle": "扫描本地音乐",
   "scanNeedPermission": "需要存储权限才能扫描本地音乐",
+  "scanImportAudio": "从文件导入音频",
+  "scanImportHint": "选择本地音频文件，将它添加到音乐库。",
+  "scanImportFailed": "无法导入音频。请尝试 MP3、M4A 或 WAV 文件。",
   "scanTapToScan": "点击下方按钮扫描设备中的音乐文件",
   "scanSongCount": "已有 {count} 首歌曲",
   "@scanSongCount": {

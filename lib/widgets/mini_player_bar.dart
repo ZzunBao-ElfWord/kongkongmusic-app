@@ -6,6 +6,9 @@ import '../theme/app_theme.dart';
 import '../widgets/album_cover.dart';
 import '../screens/player_screen.dart' show createPlayerRoute;
 import '../providers/player_provider.dart';
+import '../providers/library_provider.dart';
+import '../screens/all_songs_screen.dart';
+import '../screens/scan_screen.dart';
 import '../models/song.dart';
 import '../l10n/app_localizations.dart';
 
@@ -99,13 +102,22 @@ class _MiniPlayerBarState extends State<MiniPlayerBar>
             ? player.queue[(player.currentIndex - 1 + player.queue.length) % player.queue.length]
             : null;
 
-        return GestureDetector(
-          onTap: () {
+        void openPlayerOrLibrary() {
+          if (song != null) {
             Navigator.of(context).push(createPlayerRoute());
-          },
+            return;
+          }
+          final hasSongs = context.read<LibraryProvider>().songs.isNotEmpty;
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => hasSongs ? const AllSongsScreen() : const ScanScreen(),
+          ));
+        }
+
+        return GestureDetector(
+          onTap: openPlayerOrLibrary,
           onVerticalDragEnd: (details) {
             if (details.velocity.pixelsPerSecond.dy < -300) {
-              Navigator.of(context).push(createPlayerRoute());
+              openPlayerOrLibrary();
             }
           },
           onHorizontalDragUpdate: (d) => _onDragUpdate(d, player),
@@ -185,7 +197,7 @@ class _MiniPlayerBarState extends State<MiniPlayerBar>
                         GestureDetector(
                           onTap: song != null
                               ? () => player.togglePlayPause()
-                              : null,
+                              : openPlayerOrLibrary,
                           child: Container(
                             width: 34,
                             height: 34,
