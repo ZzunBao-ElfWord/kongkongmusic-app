@@ -1,4 +1,4 @@
-﻿{
+﻿﻿{
   "@@locale": "zh",
 
   "appName": "空空音乐",
@@ -263,5 +263,12 @@
   "unknownArtist": "未知艺人",
   "unknownAlbum": "未知专辑",
 
-  "notificationChannelName": "空空音乐"
+  "notificationChannelName": "空空音乐",
+
+  "settingsPrivacy": "隐私政策",
+  "settingsPrivacyDesc": "了解我们如何保护您的隐私",
+  "settingsTerms": "用户协议",
+  "settingsTermsDesc": "使用空空音乐的服务条款",
+  "settingsSupport": "技术支持",
+  "settingsSupportDesc": "遇到问题？联系我们"
 }

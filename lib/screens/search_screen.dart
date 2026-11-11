@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../models/song.dart';
 import '../theme/app_theme.dart';
 import '../widgets/album_cover.dart';
@@ -21,8 +22,98 @@ class _SearchScreenState extends State<SearchScreen> {
   final _controller = TextEditingController();
   final _focusNode = FocusNode();
 
+  // ===== 语音搜索相关 =====
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  bool _speechAvailable = false;
+  bool _isListening = false;
+  double _listenConfidence = 1.0;
+  String _listenText = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _initSpeech();
+  }
+
+  Future<void> _initSpeech() async {
+    try {
+      _speechAvailable = await _speech.initialize(
+        onStatus: (status) {
+          final wasListening = _isListening;
+          final nowListening = status == 'listening';
+          if (wasListening != nowListening && mounted) {
+            setState(() => _isListening = nowListening);
+            // 停止时把最终识别结果注入搜索
+            if (!nowListening && _listenText.isNotEmpty) {
+              _commitVoiceSearch(_listenText);
+            }
+          }
+        },
+        onError: (error) {
+          if (mounted) {
+            setState(() {
+              _isListening = false;
+              _listenText = '';
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('语音搜索: ${error.errorMsg ?? "错误"}'),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          }
+        },
+      );
+    } catch (_) {
+      _speechAvailable = false;
+    }
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _toggleVoiceSearch() async {
+    if (_isListening) {
+      await _speech.stop();
+      return;
+    }
+    if (!_speechAvailable) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('语音搜索不可用，请检查麦克风权限')),
+        );
+      }
+      return;
+    }
+    setState(() {
+      _listenText = '';
+      _listenConfidence = 1.0;
+      _isListening = true;
+    });
+    await _speech.listen(
+      onResult: (result) {
+        setState(() {
+          _listenText = result.recognizedWords;
+          _listenConfidence = result.confidence;
+        });
+      },
+      localeId: Localizations.localeOf(context).languageCode == 'zh'
+          ? 'zh_CN'
+          : 'en_US',
+      listenFor: const Duration(seconds: 15),
+      pauseFor: const Duration(seconds: 3),
+    );
+  }
+
+  void _commitVoiceSearch(String text) {
+    final trimmed = text.trim();
+    if (trimmed.isEmpty) return;
+    _controller.text = trimmed;
+    context.read<SearchProvider>().search(trimmed);
+    context.read<SearchProvider>().addToHistory(trimmed);
+  }
+
   @override
   void dispose() {
+    _speech.cancel();
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -60,9 +151,15 @@ class _SearchScreenState extends State<SearchScreen> {
                         style: TextStyle(
                             fontSize: 16, color: AppColors.foreground),
                         decoration: InputDecoration(
-                          hintText: l10n.searchHint,
-                          hintStyle: const TextStyle(
-                              color: AppColors.mutedForeground),
+                          hintText: _isListening
+                              ? (_listenText.isEmpty
+                                  ? '请说话…'
+                                  : _listenText)
+                              : l10n.searchHint,
+                          hintStyle: TextStyle(
+                              color: _isListening
+                                  ? AppColors.primary.withValues(alpha: 0.8)
+                                  : AppColors.mutedForeground),
                           border: InputBorder.none,
                           isDense: true,
                           contentPadding: EdgeInsets.zero,
@@ -75,6 +172,29 @@ class _SearchScreenState extends State<SearchScreen> {
                         },
                       ),
                     ),
+                    // 语音搜索按钮
+                    GestureDetector(
+                      onTap: _toggleVoiceSearch,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        width: 32,
+                        height: 32,
+                        decoration: BoxDecoration(
+                          color: _isListening
+                              ? AppColors.primary
+                              : Colors.transparent,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          _isListening ? Icons.mic : Icons.mic_none_rounded,
+                          size: 18,
+                          color: _isListening
+                              ? Colors.black
+                              : AppColors.mutedForeground,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
                     if (hasQuery)
                       GestureDetector(
                         onTap: () {
@@ -255,7 +375,6 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             Builder(builder: (context) {
-              // 稳定的打散顺序：按标题 hash 排序
               final shuffled = List<Song>.from(songs)
                 ..sort((a, b) => (a.title.hashCode ^ 0x9e3779b9)
                     .compareTo(b.title.hashCode ^ 0x9e3779b9));
@@ -403,7 +522,6 @@ class _SearchScreenState extends State<SearchScreen> {
       );
     }
 
-    // Group by artist
     final library = context.read<LibraryProvider>();
     final artistNames = <String>{};
     for (final song in results) {
@@ -413,7 +531,6 @@ class _SearchScreenState extends State<SearchScreen> {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       children: [
-        // Artist cards with avatars
         if (artistNames.length > 1) ...[
           Text(l10n.searchRelatedArtists,
               style: TextStyle(
@@ -473,7 +590,6 @@ class _SearchScreenState extends State<SearchScreen> {
           ),
           const SizedBox(height: 16),
         ],
-        // Song results
         Text(l10n.searchSongsCount(results.length),
             style: TextStyle(
                 fontSize: 16,

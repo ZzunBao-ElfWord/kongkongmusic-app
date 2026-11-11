@@ -87,3 +87,15 @@ icon_draft*.svg
 
 # Misc
 *.log
+
+# fastlane
+vendor/bundle/
+.bundle/
+ios/fastlane/.env
+ios/fastlane/*.p8
+ios/fastlane/report.xml
+ios/fastlane/Preview.html
+ios/fastlane/screenshots/**/*.png
+ios/fastlane/test_output/
+ios/fastlane/app_store_connect_api_key.json
+xcuserdata/

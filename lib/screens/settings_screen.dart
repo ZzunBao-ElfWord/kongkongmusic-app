@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_theme.dart';
 import '../providers/settings_provider.dart';
 import '../l10n/app_localizations.dart';
+import '../config/app_urls.dart';
 import 'scan_screen.dart';
 import 'equalizer_screen.dart';
 
@@ -134,6 +136,33 @@ class SettingsScreen extends StatelessWidget {
                           value: settings.notificationEnabled,
                           onChanged: (v) =>
                               settings.setNotificationEnabled(v),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildNavItem(
+                          context,
+                          icon: Icons.security_rounded,
+                          gradient: const [Color(0xFF36D1DC), Color(0xFF5B86E5)],
+                          title: l10n.settingsPrivacy,
+                          subtitle: l10n.settingsPrivacyDesc,
+                          onTap: () => _launch(AppUrls.privacy),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildNavItem(
+                          context,
+                          icon: Icons.description_rounded,
+                          gradient: const [Color(0xFFF7971E), Color(0xFFFFD200)],
+                          title: l10n.settingsTerms,
+                          subtitle: l10n.settingsTermsDesc,
+                          onTap: () => _launch(AppUrls.terms),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildNavItem(
+                          context,
+                          icon: Icons.support_agent_rounded,
+                          gradient: const [Color(0xFF11998E), Color(0xFF38EF7D)],
+                          title: l10n.settingsSupport,
+                          subtitle: l10n.settingsSupportDesc,
+                          onTap: () => _launch(AppUrls.support),
                         ),
 
                         // Footer
@@ -302,6 +331,14 @@ class SettingsScreen extends StatelessWidget {
         return l10n.settingsThemeSystem;
       default:
         return l10n.settingsThemeDark;
+    }
+  }
+
+  /// 用系统浏览器打开外部链接
+  static Future<void> _launch(String url) async {
+    final uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
   }
 

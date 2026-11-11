@@ -1,4 +1,4 @@
-﻿{
+﻿﻿{
   "@@locale": "en",
 
   "appName": "KongKong Music",
@@ -263,5 +263,12 @@
   "unknownArtist": "Unknown Artist",
   "unknownAlbum": "Unknown Album",
 
-  "notificationChannelName": "KongKong Music"
+  "notificationChannelName": "KongKong Music",
+
+  "settingsPrivacy": "Privacy Policy",
+  "settingsPrivacyDesc": "How we protect your privacy",
+  "settingsTerms": "Terms of Service",
+  "settingsTermsDesc": "Terms for using KongKong Music",
+  "settingsSupport": "Support",
+  "settingsSupportDesc": "Need help? Contact us"
 }
